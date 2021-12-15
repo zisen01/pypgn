@@ -30,11 +30,15 @@ def _get_tags(pgn: list) -> dict:
 
 def _get_moves(pgn: list) -> List[Move]:
     movetext = ''
-    for line in pgn:
-        if re.search(r'^1\. ', line):
-            movetext: str = line
+    for i in range(len(pgn)):
+        if re.search(r'^1\.', pgn[i]):
+            movetext: str = " ".join([pgn[i] for i in range(i, len(pgn))])
 
+    # some formats of pgn does not have space after period
+    if not re.search(r'^1\. ', movetext):
+        movetext = movetext.replace('.', '. ')
     movetext_items = movetext.split(" ")
+
     moves = []
     for i, item in enumerate(movetext_items):
         if re.search(r'\d\.', item):
@@ -42,7 +46,6 @@ def _get_moves(pgn: list) -> List[Move]:
                     movetext_items[i + 1],
                     movetext_items[i + 2]]
             moves.append(move)
-
     return moves
 
 
