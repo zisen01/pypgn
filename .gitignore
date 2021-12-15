@@ -113,3 +113,4 @@ docs/make.bat
 docs/source/_static/
 docs/source/_templates/
 target
+.DS_Store
