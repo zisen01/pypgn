@@ -29,17 +29,22 @@ class Game:
         """
         if path is not None:
             self.pgn: list = _get_pgn_list(path)
+            self.tags: dict = _get_tags(self.pgn)
+            self.moves: List[Move] = _get_moves(self.pgn)
         else:
             self.pgn = None
-        self.tags: dict = _get_tags(self.pgn)
-        self.moves: List[Move] = _get_moves(self.pgn)
+            self.tags = None
+            self.moves = None
 
-    def pgn(self, path: str) -> None:
+
+    def set_pgn(self, path: str) -> None:
         """Sets the pgn attribute
 
         :param path: path to pgn file or Lichess game ID
         """
         self.pgn = _get_pgn_list(path)
+        self.tags: dict = _get_tags(self.pgn)
+        self.moves: List[Move] = _get_moves(self.pgn)
 
     def pgn_list(self) -> list:
         """Gets and returns a list of lines of the PGN
