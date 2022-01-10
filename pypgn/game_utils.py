@@ -1,8 +1,10 @@
 import re
+import numpy as np
 from typing import List, NewType, Union
 from http.client import HTTPException, HTTPSConnection
 
 Move = NewType('Move', Union[str, List])
+State = NewType('State', np.ndarray)
 
 PGN_REGEX = r'(?i)(\.pgn)$'
 URL_REGEX = r'(\/\/)|(http)'
@@ -48,6 +50,57 @@ def _get_moves(pgn: list) -> List[Move]:
             moves.append(move)
     return moves
 
+def _get_states(moves: list) -> List[State]:
+    states = []
+    for i in range(len(moves)):
+        # print(int(moves[i][0][:-1]))
+        state = np.zeros((8 ,8 , 6, 2))
+        for color, move in zip(['W', 'B'], moves[i][1:]):
+            if 'x' in move:
+
+            print(color, move)
+
+def _get_init_state() -> np.ndarray:
+    # Assuming black is on the opponent(up) side, and white is on the player(down) side
+    state = np.zeros((8 ,8 , 6, 2))
+    # pawns
+    for i in range(8):
+        state[i][1][0][0] = 1 # white pawns
+        state[i][6][0][1] = 1 # black pawns
+
+    # rooks
+        #white
+    state[0][0][1][0] = 1
+    state[7][0][1][0] = 1
+        #black
+    state[0][7][1][1] = 1
+    state[7][7][1][1] = 1
+    # knights
+        #white
+    state[1][0][2][0] = 1
+    state[6][0][2][0] = 1
+        #black
+    state[1][7][2][1] = 1
+    state[6][7][2][1] = 1
+    # bishops
+        #white
+    state[2][0][3][0] = 1
+    state[5][0][3][0] = 1
+        #black
+    state[2][7][3][1] = 1
+    state[5][7][3][1] = 1
+    # queens
+        #white
+    state[3][0][4][0] = 1
+        #black
+    state[3][7][4][1] = 1
+    # kings
+        #white
+    state[4][0][5][0] = 1
+        #black
+    state[4][7][5][1] = 1
+
+    return state
 
 def _get_lichess_pgn_lines(src: str) -> list:
     conn = HTTPSConnection("lichess.org")

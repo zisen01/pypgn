@@ -1,6 +1,6 @@
 from typing import List
 from pypgn.game_utils import (
-    _get_tags, _get_pgn_list, _get_moves, Move)
+    _get_tags, _get_pgn_list, _get_moves, _get_states, Move, State)
 
 
 class Game:
@@ -31,6 +31,7 @@ class Game:
             self.pgn: list = _get_pgn_list(path)
             self.tags: dict = _get_tags(self.pgn)
             self.moves: List[Move] = _get_moves(self.pgn)
+            self.states: List[State] = _get_states(self.moves)
         else:
             self.pgn = None
             self.tags = None
