@@ -55,13 +55,58 @@ def _get_states(moves: list) -> List[State]:
     start = _get_init_state()
     states.append(start)
     visualize(start)
+    print()
+    for color, move in zip(['W', 'B'], moves[0][1:]):
+        state = _play_move(color, move, states[-1])
+        visualize(state)
+        print()
     # for i in range(len(moves)):
     #     state = states[-1]
     #     for color, move in zip(['W', 'B'], moves[i][1:]):
     #
     #         print(color, move)
 
-# def _play_move(move, state) -> State:
+def _play_move(color, move, state) -> State:
+    def text2coord(text):
+        char_dict = {"a":0, "b":1, "c":2, "d":3, "e":4, "f":5, "g":6, "h":8}
+        return (char_dict[text[0]], int(text[1])-1)
+
+    print(color, move)
+    color_dict = {"W":0, "B":1}
+    piece_dict = {"P":0, "R":1, "N":2, "B":3, "Q":4, "K":5}
+
+    color = color_dict[color]
+
+    if len(move) == 2:
+        piece = piece_dict["P"]
+        # This must be a move of pawn
+        (x,y) = text2coord(move)
+
+        #back trace the pawn in this y axis, and change it to 0
+        for i in range(state.shape[1]):
+            if state[x][i][piece][color] == 1:
+                state[x][i][piece][color] = 0
+        state[x][y][piece][color] = 1
+    else:
+        piece = piece_dict[move[0]]
+        (x,y) = text2coord(move[-2:])
+
+
+
+
+    return state
+
+def _find_from_coord(piece, now_coord):
+    candidate = []
+    #pawn
+    if piece == 0:
+        if now_coord[1] in (4,5):
+            candidate.append((now_coord[0], ))
+    #rook
+    #knight
+    #bishop
+    #queen
+    #king
 
 def visualize(state):
     piece_dict = {0:"P", 1:"R", 2:"N", 3:"B", 4:"Q", 5:"K"}
