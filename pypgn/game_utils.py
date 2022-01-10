@@ -52,15 +52,46 @@ def _get_moves(pgn: list) -> List[Move]:
 
 def _get_states(moves: list) -> List[State]:
     states = []
-    for i in range(len(moves)):
-        # print(int(moves[i][0][:-1]))
-        state = np.zeros((8 ,8 , 6, 2))
-        for color, move in zip(['W', 'B'], moves[i][1:]):
-            if 'x' in move:
+    start = _get_init_state()
+    states.append(start)
+    visualize(start)
+    # for i in range(len(moves)):
+    #     state = states[-1]
+    #     for color, move in zip(['W', 'B'], moves[i][1:]):
+    #
+    #         print(color, move)
 
-            print(color, move)
+# def _play_move(move, state) -> State:
 
-def _get_init_state() -> np.ndarray:
+def visualize(state):
+    piece_dict = {0:"P", 1:"R", 2:"N", 3:"B", 4:"Q", 5:"K"}
+    color_dict = {0:"W", 1:"B"}
+    WCOLOR =    '\033[31m' # color for white, but is actually red
+    BCOLOR =    '\033[30m'
+    GCOLOR =    '\033[33m'
+    ENDC =      '\033[0m'
+    visual_string = ""
+    for y in range(state.shape[1]):
+        line = ""
+        for x in range(state.shape[0]):
+            NoPiece = True
+            for piece in range(state.shape[2]):
+                for color in range(state.shape[3]):
+                    if state[x][y][piece][color] == 1:
+                        NoPiece = False
+                        if color_dict[color] == "W":
+                            line += WCOLOR + piece_dict[piece] + ENDC
+                        if color_dict[color] == "B":
+                            line += BCOLOR + piece_dict[piece] + ENDC
+            if NoPiece:
+                line += GCOLOR + "_" + ENDC
+        visual_string += line
+        if y < state.shape[1]-1:
+            visual_string += "\n"
+    print(visual_string)
+
+
+def _get_init_state() -> State:
     # Assuming black is on the opponent(up) side, and white is on the player(down) side
     state = np.zeros((8 ,8 , 6, 2))
     # pawns

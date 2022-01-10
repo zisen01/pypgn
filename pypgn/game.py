@@ -36,6 +36,7 @@ class Game:
             self.pgn = None
             self.tags = None
             self.moves = None
+            self.states = None
 
 
     def set_pgn(self, path: str) -> None:
@@ -46,6 +47,7 @@ class Game:
         self.pgn = _get_pgn_list(path)
         self.tags: dict = _get_tags(self.pgn)
         self.moves: List[Move] = _get_moves(self.pgn)
+        self.states: List[State] = _get_states(self.moves)
 
     def pgn_list(self) -> list:
         """Gets and returns a list of lines of the PGN
